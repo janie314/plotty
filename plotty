@@ -1,3 +1,4 @@
+#!/usr/bin/env -S uv run --script
 from matplotlib.pylab import ceil
 import polars as pl
 import matplotlib.pyplot as plt
