@@ -1,4 +1,3 @@
-#!/usr/bin/env -S uv run --script
 import polars as pl
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
@@ -6,7 +5,7 @@ import argparse
 import os
 
 
-def plot(csv_path, svg_path, title, x_date):
+def plot(csv_path, svg_path, title, x_date, line_color):
     try:
         df = pl.read_csv(csv_path, has_header=True)
         if x_date:
@@ -22,7 +21,7 @@ def plot(csv_path, svg_path, title, x_date):
             ax.xaxis.set_major_locator(mdates.MonthLocator(interval=3))
             ax.xaxis.set_major_formatter(mdates.DateFormatter("%Y-%m-%d"))
             plt.setp(ax.get_xticklabels(), rotation=45, ha="right")
-        plt.plot(x_data, y_data, linewidth=2)
+        plt.plot(x_data, y_data, linewidth=2, color=line_color)
 
         plt.ylim(bottom=0, top=1.20 * max(y_data))
 
@@ -58,6 +57,11 @@ if __name__ == "__main__":
         action="store_true",
         help="Treat the x-axis as dates",
     )
+    parser.add_argument(
+        "--line_color",
+        default="blue",
+        help="Color of the line in the plot (default: blue)",
+    )
     args = parser.parse_args()
     if args.svg:
         svg_path = args.svg
@@ -68,4 +72,4 @@ if __name__ == "__main__":
         title = args.title
     else:
         title = ""
-    plot(args.csv, svg_path, title, args.x_date)
+    plot(args.csv, svg_path, title, args.x_date, args.line_color)
